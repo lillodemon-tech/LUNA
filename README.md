@@ -26,9 +26,15 @@ CREATE TABLE links (
   title text NOT NULL,
   url text NOT NULL,
   thumb text DEFAULT '',
+  backdrop text DEFAULT '',
   type text DEFAULT 'film',
   tag text,
   notes text DEFAULT '',
+  year text,
+  rating text,
+  genres text,
+  overview text,
+  cast text,
   created_at timestamptz DEFAULT now()
 );
 
@@ -44,6 +50,23 @@ CREATE POLICY "Allow all" ON links FOR ALL USING (true) WITH CHECK (true);
 
 ---
 
+## STEP 1b — Ottieni la chiave API TMDB (gratis)
+
+1. Vai su **https://www.themoviedb.org** → crea account gratuito
+2. Vai su **Impostazioni → API → Crea → Applicazione personale**
+3. Compila il modulo (puoi scrivere "uso personale" ovunque)
+4. Copia la **API Key (v3 auth)**
+
+Con questa chiave l'app ti permette di cercare qualsiasi film o serie e importare automaticamente:
+- 🖼️ Poster (copertina) e backdrop (sfondo)
+- 📝 Trama in italiano
+- ⭐ Valutazione
+- 🎭 Generi
+- 👥 Cast principale
+- 📅 Anno di uscita
+
+---
+
 ## STEP 2 — Configura index.html
 
 Apri `index.html` con un editor di testo e trova il blocco CONFIG (verso la fine del file):
@@ -54,6 +77,7 @@ const CONFIG = {
   SUPABASE_ANON_KEY: 'INCOLLA_QUI_IL_TUO_SUPABASE_ANON_KEY',
   ADMIN_PASSWORD:    'cambia_questa_password',   // ← scegli una password
   PROXY_URL:         '',                          // ← aggiungi dopo lo step 3
+  TMDB_API_KEY:      'INCOLLA_QUI_LA_TUA_TMDB_API_KEY',
 };
 ```
 
@@ -154,4 +178,5 @@ Browser  →  GitHub Pages (index.html)
      Cloudflare Worker (proxy)    ← iframe streaming
                 ↓
           Siti streaming esterni
+```
 ```
